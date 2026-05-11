@@ -37,17 +37,12 @@ subprojects {
 
     cloudstream {
         // when running through github workflow, GITHUB_REPOSITORY should contain current repository name
-        setRepo(System.getenv("GITHUB_REPOSITORY") ?: "https://github.dev/okibcn/Cloudstream-Plugins")
-        authors = listOf("okibcn")
+        setRepo(System.getenv("GITHUB_REPOSITORY") ?: "https://github.com/h94436950-png/cinemana-plugin") // ← غيّر h94436950-png
+        authors = listOf("h94436950-png") // ← غيّر h94436950-png
     }
 
     android {
         namespace = "com.CSPlugins"
-        // buildTypes {
-        //     getByName("debug") {
-        //         isMinifyEnabled = false
-        //     }
-        // }
         defaultConfig {
             minSdk = 21
             compileSdkVersion(35)
@@ -61,7 +56,7 @@ subprojects {
 
         tasks.withType<KotlinJvmCompile> {
             compilerOptions {
-                jvmTarget.set(JvmTarget.JVM_1_8) // Required
+                jvmTarget.set(JvmTarget.JVM_1_8)
                 freeCompilerArgs.addAll(
                     "-Xno-call-assertions",
                     "-Xno-param-assertions",
@@ -72,22 +67,17 @@ subprojects {
     }
 
     dependencies {
-        val apk by configurations
+        val cloudstream by configurations // ← تغيير من apk إلى cloudstream
         val implementation by configurations
 
         // Stubs for all Cloudstream classes
-        apk("com.lagradost:cloudstream3:pre-release")
+        cloudstream("com.lagradost:cloudstream3:pre-release") // ← تغيير من apk إلى cloudstream
 
-        // these dependencies can include any of those which are added by the app,
-        // but you dont need to include any of them if you dont need them
-        // https://github.com/recloudstream/cloudstream/blob/master/app/build.gradle
-        implementation(kotlin("stdlib")) // adds standard kotlin features, like listOf, mapOf etc
-        implementation("com.github.Blatzar:NiceHttp:0.4.13") // HTTP Lib
+        implementation(kotlin("stdlib"))
+        implementation("com.github.Blatzar:NiceHttp:0.4.13")
         implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.20.1")
-        implementation("org.jsoup:jsoup:1.21.2") // HTML Parser
-        implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.10.2") // delay()
-
-        //run JS
+        implementation("org.jsoup:jsoup:1.21.2")
+        implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.10.2")
         implementation("org.mozilla:rhino:1.8.0")
     }
 }
