@@ -7,14 +7,13 @@ buildscript {
     repositories {
         google()
         mavenCentral()
-        // Shitpack repo which contains our tools and dependencies
         maven("https://jitpack.io")
     }
 
     dependencies {
-        classpath("com.android.tools.build:gradle:8.13.2")            // AGP version
-        classpath("com.github.recloudstream:gradle:-SNAPSHOT")        // Cloudstream version
-        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:2.3.0")  // Kotlin Version
+        classpath("com.android.tools.build:gradle:8.13.2")
+        classpath("com.github.recloudstream:gradle:-SNAPSHOT")
+        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:2.3.0")
     }
 }
 
@@ -26,9 +25,11 @@ allprojects {
     }
 }
 
-fun Project.cloudstream(configuration: CloudstreamExtension.() -> Unit) = extensions.getByName<CloudstreamExtension>("cloudstream").configuration()
+fun Project.cloudstream(configuration: CloudstreamExtension.() -> Unit) =
+    extensions.getByName<CloudstreamExtension>("cloudstream").configuration()
 
-fun Project.android(configuration: BaseExtension.() -> Unit) = extensions.getByName<BaseExtension>("android").configuration()
+fun Project.android(configuration: BaseExtension.() -> Unit) =
+    extensions.getByName<BaseExtension>("android").configuration()
 
 subprojects {
     apply(plugin = "com.android.library")
@@ -36,13 +37,17 @@ subprojects {
     apply(plugin = "com.lagradost.cloudstream3.gradle")
 
     cloudstream {
-        // when running through github workflow, GITHUB_REPOSITORY should contain current repository name
-        setRepo(System.getenv("GITHUB_REPOSITORY") ?: "https://github.com/h94436950-png/cinemana-plugin") // ← غيّر h94436950-png
-        authors = listOf("h94436950-png") // ← غيّر h94436950-png
+        setRepo(
+            System.getenv("GITHUB_REPOSITORY")
+                ?: "https://github.com/h94436950-png/cinemana-plugin"
+        )
+
+        authors = listOf("h94436950-png")
     }
 
     android {
         namespace = "com.CSPlugins"
+
         defaultConfig {
             minSdk = 21
             compileSdkVersion(35)
@@ -57,6 +62,7 @@ subprojects {
         tasks.withType<KotlinJvmCompile> {
             compilerOptions {
                 jvmTarget.set(JvmTarget.JVM_1_8)
+
                 freeCompilerArgs.addAll(
                     "-Xno-call-assertions",
                     "-Xno-param-assertions",
@@ -67,11 +73,11 @@ subprojects {
     }
 
     dependencies {
-        val cloudstream by configurations // ← تغيير من apk إلى cloudstream
+        val cloudstream by configurations
         val implementation by configurations
 
-        // Stubs for all Cloudstream classes
-        cloudstream("com.lagradost:cloudstream3:pre-release") // ← تغيير من apk إلى cloudstream
+        // Cloudstream API
+        cloudstream("com.lagradost:cloudstream3:pre-release")
 
         implementation(kotlin("stdlib"))
         implementation("com.github.Blatzar:NiceHttp:0.4.13")
